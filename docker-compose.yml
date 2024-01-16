@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+    mariadb:
+        container_name: swim_db
+        image: mariadb
+        cap_add: [SYS_NICE]
+        environment:
+            MYSQL_ROOT_PASSWORD: 1337
+        ports:
+            - 3306:3306
+
+    phpmyadmin:
+        container_name: swim_db_phpmyadmin
+        image: phpmyadmin
+        ports:
+            - 8080:80
+        depends_on:
+            - "mariadb"
+        cap_add: [SYS_NICE]
+        environment:
+            PMA_HOST: swim_db
+            PMA_PASSWORD: 1337
+            PMA_USER: root
