@@ -1,8 +1,7 @@
 use crate::error::RepoError;
-// use entity::models::Team;
 use entity::models::Team;
-use entity::team::{Column, Entity, Model};
-use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, QueryFilter};
+use entity::team::{ActiveModel, Column, Entity, Model};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, QueryFilter, Set, DeleteResult};
 use sea_orm::{EntityTrait, IntoActiveModel};
 
 pub struct TeamRepo(DatabaseConnection);
@@ -26,6 +25,23 @@ impl TeamRepo {
         Entity::find()
             .filter(Column::Name.contains(name))
             .all(&self.0)
+            .await
+            .map_err(RepoError::DbErr)
+    }
+
+    pub async fn update_one(&self, id: i32, model: Team) -> Result<Model, RepoError> {
+        ActiveModel {
+            id: Set(id),
+            ..model.into_active_model()
+        }
+        .update(&self.0)
+        .await
+        .map_err(RepoError::DbErr)
+    }
+
+    pub async fn delete_one_by_id(&self, id: i32) -> Result<DeleteResult, RepoError> {
+        Entity::delete_by_id(id)
+            .exec(&self.0)
             .await
             .map_err(RepoError::DbErr)
     }
