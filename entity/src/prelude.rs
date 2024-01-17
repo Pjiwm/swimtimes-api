@@ -4,4 +4,3 @@ pub use super::competition::Entity as Competition;
 pub use super::swim_time::Entity as SwimTime;
 pub use super::swimmer::Entity as Swimmer;
 pub use super::team::Entity as Team;
-pub use super::models as Models;

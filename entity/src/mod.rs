@@ -6,4 +6,3 @@ pub mod competition;
 pub mod swim_time;
 pub mod swimmer;
 pub mod team;
-pub mod models;
