@@ -1,5 +1,5 @@
 use crate::error::RepoError;
-use entity::models::Team;
+use entity::records::Team;
 use entity::team::{ActiveModel, Column, Entity, Model};
 use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, QueryFilter, Set, DeleteResult};
 use sea_orm::{EntityTrait, IntoActiveModel};

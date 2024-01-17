@@ -1,5 +1,5 @@
 mod common;
-use entity::models::Team;
+use entity::records::Team;
 use infrastructure::team_repo::TeamRepo;
 
 #[tokio::test]

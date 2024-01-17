@@ -1,7 +1,7 @@
-use async_graphql::{Context, Object, Result};
-use entity::models::Team;
-use infrastructure::team_repo::TeamRepo;
 use crate::graphql::types::TeamJson;
+use async_graphql::{Context, Object, Result};
+use entity::records::Team;
+use infrastructure::team_repo::TeamRepo;
 
 #[derive(Default)]
 pub struct TeamMutation;
