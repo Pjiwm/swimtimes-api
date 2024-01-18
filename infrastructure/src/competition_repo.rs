@@ -1,9 +1,7 @@
-use crate::result::{RepoError, map_find};
+use crate::result::{map_find, RepoError};
 use entity::records::{Competition, PopulatedCompetition};
 use entity::{competition, team};
-use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, Set,
-};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, Set};
 use sea_orm::{EntityTrait, IntoActiveModel};
 
 pub struct CompetitionRepo(DatabaseConnection);
@@ -18,9 +16,16 @@ impl CompetitionRepo {
         active_model.insert(&self.0).await.map_err(RepoError::DbErr)
     }
 
-    pub async fn find_one_by_id(&self, id: i32) -> Result<PopulatedCompetition, RepoError> {
+    pub async fn find_one_by_id(&self, id: i32) -> Result<competition::Model, RepoError> {
         let result = competition::Entity::find_by_id(id).one(&self.0).await;
-        let competition = map_find(result)?;
+        map_find(result)
+    }
+
+    pub async fn find_one_by_id_populated(
+        &self,
+        id: i32,
+    ) -> Result<PopulatedCompetition, RepoError> {
+        let competition = self.find_one_by_id(id).await?;
         let result = team::Entity::find_by_id(competition.host)
             .one(&self.0)
             .await;
