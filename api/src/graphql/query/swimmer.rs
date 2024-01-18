@@ -7,7 +7,7 @@ pub struct SwimmerQuery;
 
 #[Object]
 impl SwimmerQuery {
-    async fn get_competition_by_id(&self, ctx: &Context<'_>, id: i32) -> Result<SwimmerJson> {
+    async fn get_swimmer_by_id(&self, ctx: &Context<'_>, id: i32) -> Result<SwimmerJson> {
         let repo = ctx.data::<SwimmerRepo>()?;
         repo.find_one_by_id(id)
             .await
@@ -15,7 +15,7 @@ impl SwimmerQuery {
             .map(Into::into)
     }
 
-    async fn get_competition_by_id_populated(
+    async fn get_swimmer_by_id_populated(
         &self,
         ctx: &Context<'_>,
         id: i32,
@@ -27,7 +27,7 @@ impl SwimmerQuery {
             .map(Into::into)
     }
 
-    async fn get_competitions_by_name(
+    async fn get_swimmers_by_name(
         &self,
         ctx: &Context<'_>,
         name: String,
@@ -39,7 +39,7 @@ impl SwimmerQuery {
             .map(|x| x.into_iter().map(Into::into).collect())
     }
 
-    async fn get_competitions_by_name_populated(
+    async fn get_swimmers_by_name_populated(
         &self,
         ctx: &Context<'_>,
         name: String,
