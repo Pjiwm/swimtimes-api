@@ -1,7 +1,9 @@
 use crate::error::RepoError;
 use entity::records::{Competition, PopulatedCompetition};
 use entity::{competition, team};
-use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, QueryFilter, Set, DeleteResult};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, DeleteResult, QueryFilter, Set,
+};
 use sea_orm::{EntityTrait, IntoActiveModel};
 use tokio_stream::StreamExt;
 
@@ -44,26 +46,23 @@ impl CompetitionRepo {
     ) -> Result<Vec<PopulatedCompetition>, RepoError> {
         let competitions = self.find_many_by_name(name).await?;
 
-        let competition_populator: Vec<_> = tokio_stream::iter(competitions)
-            .map(|c| async move {
-                let team = team::Entity::find_by_id(c.host).one(&self.0).await;
-                match team {
-                    Ok(Some(t)) => Ok(PopulatedCompetition(c, t)),
-                    Ok(None) => Err(RepoError::ItemNotFound),
-                    Err(e) => Err(RepoError::DbErr(e)),
-                }
-            })
-            .collect()
-            .await;
-
-        // competition populator is a vector of futures, so we need to await them all
-        futures::future::join_all(competition_populator)
-            .await
-            .into_iter()
-            .collect()
+        let mut populated_buffer = Vec::new();
+        for c in competitions {
+            let team = team::Entity::find_by_id(c.host).one(&self.0).await;
+            match team {
+                Ok(Some(t)) => populated_buffer.push(PopulatedCompetition(c, t)),
+                Ok(None) => return Err(RepoError::ItemNotFound),
+                Err(e) => return Err(RepoError::DbErr(e)),
+            }
+        }
+        Ok(populated_buffer)
     }
 
-    pub async fn update_one(&self, id: i32, model: Competition) -> Result<competition::Model, RepoError> {
+    pub async fn update_one(
+        &self,
+        id: i32,
+        model: Competition,
+    ) -> Result<competition::Model, RepoError> {
         competition::ActiveModel {
             id: Set(id),
             ..model.into_active_model()
