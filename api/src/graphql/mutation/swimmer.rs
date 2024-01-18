@@ -1,32 +1,32 @@
-use crate::graphql::types::CompetitionJson;
+use crate::graphql::types::SwimmerJson;
 use async_graphql::{Context, Object, Result};
-use entity::records::Competition;
-use repository::competition_repo::CompetitionRepo;
+use entity::records::Swimmer;
+use repository::swimmer_repo::SwimmerRepo;
 
 #[derive(Default)]
-pub struct CompetitionMutation;
+pub struct SwimmerMutation;
 
 #[Object]
-impl CompetitionMutation {
-    pub async fn create_competition(
+impl SwimmerMutation {
+    pub async fn create_swimmer(
         &self,
         ctx: &Context<'_>,
-        input: Competition,
-    ) -> Result<CompetitionJson> {
-        let repo = ctx.data::<CompetitionRepo>()?;
+        input: Swimmer,
+    ) -> Result<SwimmerJson> {
+        let repo = ctx.data::<SwimmerRepo>()?;
         repo.insert_one(input)
             .await
             .map_err(Into::into)
             .map(Into::into)
     }
 
-    pub async fn update_competition(
+    pub async fn update_swimmer(
         &self,
         ctx: &Context<'_>,
         id: i32,
-        input: Competition,
-    ) -> Result<CompetitionJson> {
-        let repo = ctx.data::<CompetitionRepo>()?;
+        input: Swimmer,
+    ) -> Result<SwimmerJson> {
+        let repo = ctx.data::<SwimmerRepo>()?;
         repo.update_one(id, input)
             .await
             .map_err(Into::into)
@@ -34,7 +34,7 @@ impl CompetitionMutation {
     }
 
     pub async fn delete_swimmer(&self, ctx: &Context<'_>, id: i32) -> Result<bool> {
-        let repo = ctx.data::<CompetitionRepo>()?;
+        let repo = ctx.data::<SwimmerRepo>()?;
         repo.delete_one_by_id(id)
             .await
             .map_err(Into::into)
