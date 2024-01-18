@@ -14,7 +14,7 @@ impl CompetitionMutation {
         input: Competition,
     ) -> Result<CompetitionJson> {
         let repo = ctx.data::<CompetitionRepo>()?;
-        repo.insert_one(input.into())
+        repo.insert_one(input)
             .await
             .map_err(|e| e.into())
             .map(|x| x.into())

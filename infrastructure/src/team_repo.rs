@@ -2,7 +2,7 @@ use crate::result::{RepoError, map_find};
 use entity::records::Team;
 use entity::team::{ActiveModel, Column, Entity, Model};
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, DeleteResult, QueryFilter, Set,
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, Set,
 };
 use sea_orm::{EntityTrait, IntoActiveModel};
 

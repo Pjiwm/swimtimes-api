@@ -10,7 +10,7 @@ pub struct TeamMutation;
 impl TeamMutation {
     pub async fn create_team(&self, ctx: &Context<'_>, input: Team) -> Result<TeamJson> {
         let repo = ctx.data::<TeamRepo>()?;
-        repo.insert_one(input.into())
+        repo.insert_one(input)
             .await
             .map_err(|e| e.into())
             .map(|x| x.into())
