@@ -7,13 +7,14 @@ pub struct CompetitionQuery;
 
 #[Object]
 impl CompetitionQuery {
-    async fn get_teams_by_name(
+    async fn get_competitions_by_name(
         &self,
         ctx: &Context<'_>,
         name: String,
     ) -> Result<Vec<CompetitionJson>> {
         let repo = ctx.data::<CompetitionRepo>()?;
-        let x = repo.find_many_by_name_populated(&name)
+        let x = repo
+            .find_many_by_name_populated(&name)
             .await
             .map_err(|e| e.into())
             .map(|x| x.into_iter().map(|x| x.into()).collect());
