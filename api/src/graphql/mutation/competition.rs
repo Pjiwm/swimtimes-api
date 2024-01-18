@@ -8,7 +8,7 @@ pub struct CompetitionMutation;
 
 #[Object]
 impl CompetitionMutation {
-    pub async fn create_team(
+    pub async fn create_competition(
         &self,
         ctx: &Context<'_>,
         input: Competition,
@@ -20,7 +20,7 @@ impl CompetitionMutation {
             .map(|x| x.into())
     }
 
-    pub async fn update_team(
+    pub async fn update_competition(
         &self,
         ctx: &Context<'_>,
         id: i32,
