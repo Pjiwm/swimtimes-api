@@ -16,8 +16,8 @@ impl CompetitionMutation {
         let repo = ctx.data::<CompetitionRepo>()?;
         repo.insert_one(input)
             .await
-            .map_err(|e| e.into())
-            .map(|x| x.into())
+            .map_err(Into::into)
+            .map(Into::into)
     }
 
     pub async fn update_competition(
@@ -29,15 +29,15 @@ impl CompetitionMutation {
         let repo = ctx.data::<CompetitionRepo>()?;
         repo.update_one(id, input)
             .await
-            .map_err(|e| e.into())
-            .map(|x| x.into())
+            .map_err(Into::into)
+            .map(Into::into)
     }
 
     pub async fn delete_team(&self, ctx: &Context<'_>, id: i32) -> Result<bool> {
         let repo = ctx.data::<CompetitionRepo>()?;
         repo.delete_one_by_id(id)
             .await
-            .map_err(|e| e.into())
+            .map_err(Into::into)
             .map(|x| x.rows_affected == 1)
     }
 }
