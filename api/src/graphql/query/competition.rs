@@ -1,4 +1,4 @@
-use crate::graphql::types::PopulatedCompetitionJson;
+use crate::graphql::types::{CompetitionJson, PopulatedCompetitionJson};
 use async_graphql::{Context, Object, Result};
 use repository::competition_repo::CompetitionRepo;
 
@@ -7,40 +7,12 @@ pub struct CompetitionQuery;
 
 #[Object]
 impl CompetitionQuery {
-    async fn get_competition_by_id(
-        &self,
-        ctx: &Context<'_>,
-        id: i32,
-    ) -> Result<PopulatedCompetitionJson> {
+    async fn get_competition_by_id(&self, ctx: &Context<'_>, id: i32) -> Result<CompetitionJson> {
         let repo = ctx.data::<CompetitionRepo>()?;
-        repo.find_one_by_id_populated(id)
+        repo.find_one_by_id(id)
             .await
-            .map_err(|e| e.into())
-            .map(|x| x.into())
-    }
-
-    async fn get_competitions_by_name_populated(
-        &self,
-        ctx: &Context<'_>,
-        name: String,
-    ) -> Result<Vec<PopulatedCompetitionJson>> {
-        let repo = ctx.data::<CompetitionRepo>()?;
-        repo.find_many_by_name_populated(&name)
-            .await
-            .map_err(|e| e.into())
-            .map(|x| x.into_iter().map(|x| x.into()).collect())
-    }
-
-    async fn get_competitions_by_name(
-        &self,
-        ctx: &Context<'_>,
-        name: String,
-    ) -> Result<Vec<PopulatedCompetitionJson>> {
-        let repo = ctx.data::<CompetitionRepo>()?;
-        repo.find_many_by_name_populated(&name)
-            .await
-            .map_err(|e| e.into())
-            .map(|x| x.into_iter().map(|x| x.into()).collect())
+            .map_err(Into::into)
+            .map(Into::into)
     }
 
     async fn get_competition_by_id_populated(
@@ -51,7 +23,31 @@ impl CompetitionQuery {
         let repo = ctx.data::<CompetitionRepo>()?;
         repo.find_one_by_id_populated(id)
             .await
-            .map_err(|e| e.into())
-            .map(|x| x.into())
+            .map_err(Into::into)
+            .map(Into::into)
+    }
+
+    async fn get_competitions_by_name(
+        &self,
+        ctx: &Context<'_>,
+        name: String,
+    ) -> Result<Vec<CompetitionJson>> {
+        let repo = ctx.data::<CompetitionRepo>()?;
+        repo.find_many_by_name(&name)
+            .await
+            .map_err(Into::into)
+            .map(|x| x.into_iter().map(Into::into).collect())
+    }
+
+    async fn get_competitions_by_name_populated(
+        &self,
+        ctx: &Context<'_>,
+        name: String,
+    ) -> Result<Vec<PopulatedCompetitionJson>> {
+        let repo = ctx.data::<CompetitionRepo>()?;
+        repo.find_many_by_name_populated(&name)
+            .await
+            .map_err(Into::into)
+            .map(|x| x.into_iter().map(Into::into).collect())
     }
 }

@@ -122,7 +122,6 @@ async fn find_new_competition() {
 
     let found_competition = competition_repo.find_one_by_id_populated(1).await;
     assert!(found_competition.is_ok());
-    // assert_eq!(found_team.unwrap().name, "Team NL".to_owned());
     assert_eq!(found_competition.as_ref().unwrap().0.name, "Competition 1".to_owned());
     assert_eq!(new_team.name, found_competition.unwrap().1.name);
 
