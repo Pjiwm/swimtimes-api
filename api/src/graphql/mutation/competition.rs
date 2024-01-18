@@ -33,7 +33,7 @@ impl CompetitionMutation {
             .map(Into::into)
     }
 
-    pub async fn delete_team(&self, ctx: &Context<'_>, id: i32) -> Result<bool> {
+    pub async fn delete_swimmer(&self, ctx: &Context<'_>, id: i32) -> Result<bool> {
         let repo = ctx.data::<CompetitionRepo>()?;
         repo.delete_one_by_id(id)
             .await
