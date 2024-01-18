@@ -1,7 +1,7 @@
 mod common;
 use entity::records::{Team, Competition};
-use infrastructure::team_repo::TeamRepo;
-use infrastructure::competition_repo::CompetitionRepo;
+use repository::team_repo::TeamRepo;
+use repository::competition_repo::CompetitionRepo;
 
 #[tokio::test]
 async fn find_new_team() {

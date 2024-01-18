@@ -1,7 +1,7 @@
 use super::{mutation::Mutation, query::Query};
 use async_graphql::{EmptySubscription, Schema};
-use infrastructure::competition_repo::CompetitionRepo;
-use infrastructure::team_repo::TeamRepo;
+use repository::competition_repo::CompetitionRepo;
+use repository::team_repo::TeamRepo;
 use sea_orm::DatabaseConnection;
 pub type AppSchema = Schema<Query, Mutation, EmptySubscription>;
 

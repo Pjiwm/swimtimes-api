@@ -2,7 +2,7 @@
     "rust-analyzer.linkedProjects": [
         "./migration/Cargo.toml",
         "./entity/Cargo.toml",
-        "./infrastructure/Cargo.toml",
+        "./repository/Cargo.toml",
         "./api/Cargo.toml",
     ],
     "rust-analyzer.showUnlinkedFileNotification": false

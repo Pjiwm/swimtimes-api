@@ -1,6 +1,6 @@
 use crate::graphql::types::TeamJson;
 use async_graphql::{Context, Object, Result};
-use infrastructure::team_repo::TeamRepo;
+use repository::team_repo::TeamRepo;
 
 #[derive(Default)]
 pub struct TeamQuery;

@@ -1,7 +1,7 @@
 use crate::graphql::types::CompetitionJson;
 use async_graphql::{Context, Object, Result};
 use entity::records::Competition;
-use infrastructure::competition_repo::CompetitionRepo;
+use repository::competition_repo::CompetitionRepo;
 
 #[derive(Default)]
 pub struct CompetitionMutation;

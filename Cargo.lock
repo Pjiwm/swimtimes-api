@@ -146,7 +146,7 @@ dependencies = [
  "chrono",
  "entity",
  "hyper",
- "infrastructure",
+ "repository",
  "sea-orm",
  "serde",
  "tokio",
@@ -1513,16 +1513,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "infrastructure"
-version = "0.1.0"
-dependencies = [
- "entity",
- "futures",
- "sea-orm",
- "tokio-stream",
-]
-
-[[package]]
 name = "inherent"
 version = "1.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2260,6 +2250,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2571463863a6bd50c32f94402933f03457a3fbaf697a707c5be741e459f08fd"
 dependencies = [
  "bytecheck",
+]
+
+[[package]]
+name = "repository"
+version = "0.1.0"
+dependencies = [
+ "entity",
+ "futures",
+ "sea-orm",
+ "tokio-stream",
 ]
 
 [[package]]
@@ -3054,8 +3054,8 @@ dependencies = [
  "api",
  "chrono",
  "entity",
- "infrastructure",
  "migration",
+ "repository",
  "sea-orm",
  "tokio",
  "tokio-util",

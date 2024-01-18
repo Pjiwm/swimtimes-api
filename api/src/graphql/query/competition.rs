@@ -1,6 +1,6 @@
 use crate::graphql::types::PopulatedCompetitionJson;
 use async_graphql::{Context, Object, Result};
-use infrastructure::competition_repo::CompetitionRepo;
+use repository::competition_repo::CompetitionRepo;
 
 #[derive(Default)]
 pub struct CompetitionQuery;
