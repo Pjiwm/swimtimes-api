@@ -17,7 +17,7 @@ impl TeamQuery {
 
     async fn get_team_by_id(&self, ctx: &Context<'_>, id: i32) -> Result<TeamJson> {
         let repo = ctx.data::<TeamRepo>()?;
-        repo.find_one(id)
+        repo.find_one_by_id(id)
             .await
             .map_err(|e| e.into())
             .map(|x| x.into())

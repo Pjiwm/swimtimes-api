@@ -16,7 +16,7 @@ async fn find_new_team() {
     };
     repo.insert_one(new_team).await.unwrap();
 
-    let found_team = repo.find_one(1).await;
+    let found_team = repo.find_one_by_id(1).await;
     assert!(found_team.is_ok());
     assert_eq!(found_team.unwrap().name, "Team NL".to_owned());
 }

@@ -18,7 +18,7 @@ impl TeamMutation {
 
     pub async fn update_team(&self, ctx: &Context<'_>, id: i32, input: Team) -> Result<TeamJson> {
         let repo = ctx.data::<TeamRepo>()?;
-        repo.update_one(id, input.into())
+        repo.update_one(id, input)
             .await
             .map_err(|e| e.into())
             .map(|x| x.into())
