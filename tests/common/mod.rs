@@ -1,4 +1,5 @@
 use entity::team::Entity as TeamEntity;
+use entity::competition::Entity as CompetitionEntity;
 use migration::TableCreateStatement;
 use sea_orm::{ConnectionTrait, Database, DbBackend, DbConn, Schema, DatabaseConnection};
 pub async fn setup() -> DatabaseConnection {
@@ -17,6 +18,11 @@ async fn setup_schema(db: &DbConn) {
 
     // Derive from Entity
     let stmt: TableCreateStatement = schema.create_table_from_entity(TeamEntity);
+
+    // Execute create table statement
+    let _ = db.execute(db.get_database_backend().build(&stmt)).await;
+
+    let stmt: TableCreateStatement = schema.create_table_from_entity(CompetitionEntity);
 
     // Execute create table statement
     let _ = db.execute(db.get_database_backend().build(&stmt)).await;
