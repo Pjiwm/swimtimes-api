@@ -1,4 +1,4 @@
-use crate::error::RepoError;
+use crate::result::{RepoError, map_find};
 use entity::records::Team;
 use entity::team::{ActiveModel, Column, Entity, Model};
 use sea_orm::{
@@ -46,13 +46,5 @@ impl TeamRepo {
             .exec(&self.0)
             .await
             .map_err(RepoError::DbErr)
-    }
-}
-
-fn map_find<T>(result: Result<Option<T>, DbErr>) -> Result<T, RepoError> {
-    match result {
-        Ok(Some(model)) => Ok(model),
-        Ok(None) => Err(RepoError::ItemNotFound),
-        Err(e) => Err(RepoError::DbErr(e)),
     }
 }

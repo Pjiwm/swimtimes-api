@@ -1,11 +1,10 @@
-use crate::error::RepoError;
+use crate::result::{RepoError, map_find};
 use entity::records::{Competition, PopulatedCompetition};
 use entity::{competition, team};
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, DeleteResult, QueryFilter, Set,
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, Set,
 };
 use sea_orm::{EntityTrait, IntoActiveModel};
-use tokio_stream::StreamExt;
 
 pub struct CompetitionRepo(DatabaseConnection);
 
@@ -77,13 +76,5 @@ impl CompetitionRepo {
             .exec(&self.0)
             .await
             .map_err(RepoError::DbErr)
-    }
-}
-
-fn map_find<T>(result: Result<Option<T>, DbErr>) -> Result<T, RepoError> {
-    match result {
-        Ok(Some(model)) => Ok(model),
-        Ok(None) => Err(RepoError::ItemNotFound),
-        Err(e) => Err(RepoError::DbErr(e)),
     }
 }

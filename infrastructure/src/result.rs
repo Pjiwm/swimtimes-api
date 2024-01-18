@@ -38,3 +38,11 @@ impl RepoError {
         }
     }
 }
+
+pub fn map_find<T>(result: Result<Option<T>, DbErr>) -> Result<T, RepoError> {
+    match result {
+        Ok(Some(model)) => Ok(model),
+        Ok(None) => Err(RepoError::ItemNotFound),
+        Err(e) => Err(RepoError::DbErr(e)),
+    }
+}
