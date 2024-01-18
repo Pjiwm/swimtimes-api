@@ -1,4 +1,4 @@
-use crate::graphql::types::CompetitionJson;
+use crate::graphql::types::PopulatedCompetitionJson;
 use async_graphql::{Context, Object, Result};
 use infrastructure::competition_repo::CompetitionRepo;
 
@@ -11,7 +11,7 @@ impl CompetitionQuery {
         &self,
         ctx: &Context<'_>,
         name: String,
-    ) -> Result<Vec<CompetitionJson>> {
+    ) -> Result<Vec<PopulatedCompetitionJson>> {
         let repo = ctx.data::<CompetitionRepo>()?;
         let x = repo
             .find_many_by_name_populated(&name)
@@ -21,7 +21,7 @@ impl CompetitionQuery {
         x
     }
 
-    async fn get_competition_by_id(&self, ctx: &Context<'_>, id: i32) -> Result<CompetitionJson> {
+    async fn get_competition_by_id(&self, ctx: &Context<'_>, id: i32) -> Result<PopulatedCompetitionJson> {
         let repo = ctx.data::<CompetitionRepo>()?;
         repo.find_one_by_id(id)
             .await
