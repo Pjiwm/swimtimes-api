@@ -250,6 +250,7 @@ dependencies = [
  "handlebars",
  "http",
  "indexmap",
+ "log",
  "mime",
  "multer",
  "num-traits",

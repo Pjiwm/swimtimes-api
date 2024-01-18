@@ -16,6 +16,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         port: 3000,
         db_connection: db,
     };
+    println!("Successfully connected to database");
     run_server(server_settings).await;
 
     Ok(())

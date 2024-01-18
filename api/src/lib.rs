@@ -43,6 +43,7 @@ pub async fn run_server(settings: ServerSettings) {
             get(graphql_playground).post(graphql_handler),
         )
         .with_state(schema);
+        // .layer(axum::middleware::from_fn(middleware::log_middleware));
     info!("Starting server on port {}", settings.port);
     info!("GraphQL Playground: http://localhost:{}/api/graphql", settings.port);
     let bind_addr = format!("0.0.0.0:{}", settings.port);
