@@ -4,10 +4,10 @@ use entity::records::SwimTime;
 use repository::swim_time_repo::SwimTimeRepo;
 
 #[derive(Default)]
-pub struct SwimmerMutation;
+pub struct SwimTimeMutation;
 
 #[Object]
-impl SwimmerMutation {
+impl SwimTimeMutation {
     pub async fn create_swim_time(
         &self,
         ctx: &Context<'_>,
