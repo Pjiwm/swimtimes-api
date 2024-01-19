@@ -1,7 +1,7 @@
 use crate::result::{map_find, RepoError};
 use entity::records::{PopulatedSwimmer, Swimmer};
-use entity::{swimmer, team};
-use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, Set};
+use entity::{swimmer, team, swim_time};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, Set, Related};
 use sea_orm::{EntityTrait, IntoActiveModel};
 
 pub struct SwimmerRepo(DatabaseConnection);
@@ -65,6 +65,13 @@ impl SwimmerRepo {
     }
 
     pub async fn delete_one_by_id(&self, id: i32) -> Result<DeleteResult, RepoError> {
+        // Delete their times first: foreign key constraint
+        swim_time::Entity::delete_many()
+            .filter(swim_time::Column::Swimmer.eq(id))
+            .exec(&self.0)
+            .await
+            .map_err(RepoError::DbErr)?;
+
         swimmer::Entity::delete_by_id(id)
             .exec(&self.0)
             .await
