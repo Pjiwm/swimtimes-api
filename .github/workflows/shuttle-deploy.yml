@@ -1,7 +1,3 @@
-To change the workflow trigger from both push and workflow_dispatch to manual-only, you can modify your workflow as follows:
-
-yaml
-
 name: Shuttle Deploy
 
 on:
