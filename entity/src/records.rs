@@ -1,4 +1,4 @@
-use crate::{competition, team, swimmer};
+use crate::{competition, swim_time, swimmer, team};
 use serde::{ser::SerializeStruct, Serialize, Serializer};
 
 pub use team_mod::Team;
@@ -42,6 +42,21 @@ mod competition_mod {
     }
 }
 
+pub use swim_time_mod::SwimTime;
+mod swim_time_mod {
+    use crate::swim_time::ActiveModel;
+    use sea_orm::DeriveIntoActiveModel;
+
+    #[derive(DeriveIntoActiveModel, Clone, Debug, PartialEq, Eq, async_graphql::InputObject)]
+    pub struct SwimTime {
+        pub competition: i32,
+        pub distance: i32,
+        pub stroke: String,
+        pub time: i32,
+        pub swimmer: i32,
+    }
+}
+
 pub struct PopulatedCompetition(pub competition::Model, pub team::Model);
 impl Serialize for PopulatedCompetition {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -78,6 +93,33 @@ impl Serialize for PopulatedSwimmer {
         state.serialize_field("dateOfBirth", &swimmer.date_of_birth)?;
         state.serialize_field("teamId", &swimmer.team)?;
         state.serialize_field("team", &team)?;
+        state.end()
+    }
+}
+
+pub struct PopulatedSwimTime(
+    pub swim_time::Model,
+    pub competition::Model,
+    pub swimmer::Model,
+);
+impl Serialize for PopulatedSwimTime {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let swim_time = &self.0;
+        let competition = &self.1;
+        let swimmer = &self.2;
+        let mut state = serializer.serialize_struct("SwimTime", 6)?;
+
+        state.serialize_field("id", &swim_time.id)?;
+        state.serialize_field("competitionId", &swim_time.competition)?;
+        state.serialize_field("competition", &competition)?;
+        state.serialize_field("distance", &swim_time.distance)?;
+        state.serialize_field("stroke", &swim_time.stroke)?;
+        state.serialize_field("time", &swim_time.time)?;
+        state.serialize_field("swimmerId", &swim_time.swimmer)?;
+        state.serialize_field("swimmer", &swimmer.name)?;
         state.end()
     }
 }

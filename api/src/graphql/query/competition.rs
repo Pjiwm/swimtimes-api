@@ -1,4 +1,4 @@
-use crate::graphql::types::{CompetitionJson, PopulatedCompetitionJson};
+use crate::graphql::json_types::{CompetitionJson, PopulatedCompetitionJson};
 use async_graphql::{Context, Object, Result};
 use repository::competition_repo::CompetitionRepo;
 

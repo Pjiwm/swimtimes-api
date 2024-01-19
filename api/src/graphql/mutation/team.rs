@@ -1,4 +1,4 @@
-use crate::graphql::types::TeamJson;
+use crate::graphql::json_types::TeamJson;
 use async_graphql::{Context, Object, Result};
 use entity::records::Team;
 use repository::team_repo::TeamRepo;
