@@ -1,7 +1,7 @@
 use crate::result::{map_find, RepoError};
 use entity::records::{PopulatedSwimmer, Swimmer};
 use entity::{swimmer, team, swim_time};
-use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, Set, Related};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, Set};
 use sea_orm::{EntityTrait, IntoActiveModel};
 
 pub struct SwimmerRepo(DatabaseConnection);
