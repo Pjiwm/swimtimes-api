@@ -17,5 +17,4 @@ entity = { path = "../entity" }
 chrono = "0.4.31"
 serde = { version = "1.0", features = ["derive"] }
 sea-orm = { version = "0.12" }
-env_logger = "0.10.2"
 log = "0.4.20"

@@ -10,7 +10,6 @@ use axum_macros::debug_handler;
 use graphql::schema::AppSchema;
 use log::info;
 use sea_orm::DatabaseConnection;
-use tokio::net::TcpListener;
 
 use crate::graphql::schema::build_schema;
 pub mod graphql;
@@ -28,27 +27,17 @@ async fn graphql_playground() -> impl IntoResponse {
 
 pub struct ServerSettings {
     pub db_connection: DatabaseConnection,
-    pub port: u16,
 }
 
-pub async fn run_server(settings: ServerSettings) {
-    #[cfg(debug_assertions)]
+pub async fn server(settings: &ServerSettings) -> Router {
+    // #[cfg(debug_assertions)]
     let schema = build_schema(settings.db_connection.clone()).await;
 
-
-    env_logger::init();
-    let app = Router::new()
+    info!("GraphQL Playground: http://localhost:8000/api/graphql",);
+    Router::new()
         .route(
             "/api/graphql",
             get(graphql_playground).post(graphql_handler),
         )
-        .with_state(schema);
-        // .layer(axum::middleware::from_fn(middleware::log_middleware));
-    info!("Starting server on port {}", settings.port);
-    info!("GraphQL Playground: http://localhost:{}/api/graphql", settings.port);
-    let bind_addr = format!("0.0.0.0:{}", settings.port);
-    let listener = TcpListener::bind(bind_addr).await.unwrap();
-    axum::serve(listener, app.into_make_service())
-        .await
-        .unwrap();
+        .with_state(schema)
 }
