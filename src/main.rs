@@ -1,23 +1,30 @@
-use api::{run_server, ServerSettings};
+use api::ServerSettings;
 use migration::{Migrator, MigratorTrait};
-use sea_orm::{Database, DatabaseConnection};
-use std::env;
-use std::error::Error;
+use sea_orm::SqlxPostgresConnector;
+use sqlx::PgPool;
 
+#[shuttle_runtime::main]
+async fn axum(
+    #[shuttle_shared_db::Postgres] pool: PgPool,
+    #[shuttle_secrets::Secrets] secrets: shuttle_secrets::SecretStore,
+) -> shuttle_axum::ShuttleAxum {
+    set_secrets(secrets);
+    match env_logger::try_init() {
+        Ok(_) => println!("Logger initialized"),
+        Err(_) => println!("Logger already initialized"),
+    }
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
-    dotenv::dotenv().ok();
-
-    let database_url = env::var("DATABASE_URL")?;
-    let db: DatabaseConnection = Database::connect(database_url).await?;
-    Migrator::up(&db, None).await?;
-    let server_settings = ServerSettings {
-        port: 3000,
-        db_connection: db,
-    };
+    let db = SqlxPostgresConnector::from_sqlx_postgres_pool(pool);
+    Migrator::up(&db, None).await.unwrap();
+    let server_settings = ServerSettings { db_connection: db };
     println!("Successfully connected to database");
-    run_server(server_settings).await;
+    let app = api::server(&server_settings).await;
 
-    Ok(())
+    Ok(app.into())
+}
+
+fn set_secrets(secrets: shuttle_secrets::SecretStore) {
+    secrets.into_iter().for_each(|(k, v)| {
+        std::env::set_var(k, v);
+    });
 }
