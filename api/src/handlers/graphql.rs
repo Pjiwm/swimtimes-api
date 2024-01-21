@@ -21,6 +21,11 @@ pub async fn playground() -> impl IntoResponse {
 }
 
 #[debug_handler]
+pub async fn local_handler(data: State<AppData>, req: GraphQLRequest) -> GraphQLResponse {
+    data.schema.execute(req.into_inner()).await.into()
+}
+
+#[debug_handler]
 pub async fn auth_handler(
     data: State<AppData>,
     headers: HeaderMap,
