@@ -247,7 +247,7 @@ impl JwkAuth {
                 verifier_guard.set_keys(jwk_keys.keys);
                 refresh_guard.0 = SystemTime::now();
                 refresh_guard.1 = jwk_keys.validity;
-                info!("Refreshed jwk keys");
+                info!("Refreshed jwk keys {}s", jwk_keys.validity.as_secs());
             }
         }
         Some(verifier_guard.clone())
