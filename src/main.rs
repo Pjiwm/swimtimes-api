@@ -16,7 +16,11 @@ async fn axum(
 
     let db = SqlxPostgresConnector::from_sqlx_postgres_pool(pool);
     Migrator::up(&db, None).await.unwrap();
-    let server_settings = ServerSettings { db_connection: db };
+    let server_settings = ServerSettings {
+        db_connection: db,
+        use_auth: true,
+        use_playground: true,
+    };
     println!("Successfully connected to database");
     let app = api::server(&server_settings).await;
 
