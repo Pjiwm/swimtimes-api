@@ -80,8 +80,8 @@ fn get_token_from_header(header: &str) -> Option<String> {
     }
 }
 
-async fn verify_token(token: &String, auth: &jwk::JwkAuth) -> Option<String> {
-    let verified_token = auth.verify(&token).await;
+async fn verify_token(token: &str, auth: &jwk::JwkAuth) -> Option<String> {
+    let verified_token = auth.verify(token).await;
     match verified_token {
         Some(token) => Some(token.claims.sub),
         None => None,

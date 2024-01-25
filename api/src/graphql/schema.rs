@@ -1,6 +1,6 @@
 use crate::jwk::JwkAuth;
 
-use super::extensions::auth::{self, Auth};
+use super::extensions::auth::Auth;
 use super::{mutation::Mutation, query::Query};
 use async_graphql::extensions::Logger;
 use async_graphql::{EmptySubscription, Schema};

@@ -87,9 +87,9 @@ impl JwkConfiguration {
     }
 
     fn parse_max_age_value(&self, cache_control_value: &str) -> Result<Duration, JwkError> {
-        let tokens: Vec<&str> = cache_control_value.split(",").collect();
+        let tokens: Vec<&str> = cache_control_value.split(',').collect();
         for token in tokens {
-            let key_value: Vec<&str> = token.split("=").map(|s| s.trim()).collect();
+            let key_value: Vec<&str> = token.split('=').map(|s| s.trim()).collect();
             let key = key_value.first().ok_or(JwkError::MissingKey)?;
             let val = key_value.get(1).ok_or(JwkError::MaxAgeValueEmpty)?;
 
@@ -155,7 +155,7 @@ impl JwkVerifier {
         }
     }
 
-    pub fn verify(&self, token: &String) -> Option<TokenData<Claims>> {
+    pub fn verify(&self, token: &str) -> Option<TokenData<Claims>> {
         let token_kid = match decode_header(token).map(|header| header.kid) {
             Ok(Some(header)) => header,
             _ => return None,
@@ -184,7 +184,7 @@ impl JwkVerifier {
     fn decode_token_with_key(
         &self,
         key: &JwkKey,
-        token: &String,
+        token: &str,
     ) -> Result<TokenData<Claims>, VerificationError> {
         let algorithm = match Algorithm::from_str(&key.alg) {
             Ok(alg) => alg,
@@ -196,8 +196,8 @@ impl JwkVerifier {
         validation.set_issuer(&[self.config.issuer.clone()]);
         let key = DecodingKey::from_rsa_components(&key.n, &key.e)
             .map_err(|_| VerificationError::FailedToDecodeKey)?;
-        return decode::<Claims>(token, &key, &validation)
-            .map_err(|_| VerificationError::InvalidSignature);
+
+        decode::<Claims>(token, &key, &validation).map_err(|_| VerificationError::InvalidSignature)
     }
 }
 
@@ -253,7 +253,7 @@ impl JwkAuth {
         Some(verifier_guard.clone())
     }
 
-    pub async fn verify(&self, token: &String) -> Option<TokenData<Claims>> {
+    pub async fn verify(&self, token: &str) -> Option<TokenData<Claims>> {
         match self.fetch_and_refresh().await {
             Some(verifier) => verifier.verify(token),
             None => None,
