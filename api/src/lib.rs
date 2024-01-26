@@ -43,7 +43,7 @@ pub async fn server(settings: &ServerSettings) -> Router {
 
 const ROUTE: &str = "/graphql";
 pub fn graphql_router() -> Router<AppData> {
-    info!("GraphQL playground: http://localhost:8000/api{}" ROUTE);
+    info!("GraphQL playground: http://localhost:8000/api{}", ROUTE);
     Router::new()
         .route(ROUTE, get(playground))
         .route(ROUTE, post(graphql_handler))
