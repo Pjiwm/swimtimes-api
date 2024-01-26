@@ -9,7 +9,7 @@ use async_trait::async_trait;
 use axum::http;
 use hyper::HeaderMap;
 
-use crate::jwt;
+use crate::jwt::{self, Claims};
 
 pub struct Auth;
 
@@ -56,9 +56,12 @@ impl Extension for AuthExtension {
                 None,
             ))?;
 
-            self.jwt_verifier
+            let claims = self
+                .jwt_verifier
                 .check_claims(jwt)
                 .map_err(|_| ServerError::new("Authorization header is invalid.", None))?;
+
+            check_role_permission(claims)?;
             Ok(document)
         }
     }
@@ -76,5 +79,15 @@ fn get_token_from_header(header: &str) -> Option<String> {
     match header.len() {
         l if l < prefix_len => None,
         _ => Some(header[prefix_len..].to_string()),
+    }
+}
+
+fn check_role_permission(claims: Claims) -> ServerResult<()> {
+    match claims.role.as_str() {
+        "manager" => Ok(()),
+        other_role => Err(ServerError::new(
+            format!("'{other_role}' user is not authorized for this action."),
+            None,
+        )),
     }
 }
