@@ -9,7 +9,9 @@ use axum::{
 use axum_macros::debug_handler;
 use graphql::schema::AppSchema;
 use hyper::HeaderMap;
+use log::info;
 use sea_orm::DatabaseConnection;
+use tower_http::services::{ServeDir, ServeFile};
 
 use crate::graphql::schema::build_schema;
 pub mod graphql;
@@ -31,11 +33,17 @@ pub async fn server(settings: &ServerSettings) -> Router {
         schema: build_schema(settings.db_connection.clone(), settings.use_auth).await,
     };
     let graphql = graphql_router();
-    Router::new().nest("/api", graphql).with_state(app_data)
+    let web = web_router();
+
+    Router::new()
+        .nest("/api", graphql)
+        .with_state(app_data)
+        .nest("/", web)
 }
 
 const ROUTE: &str = "/graphql";
 pub fn graphql_router() -> Router<AppData> {
+    info!("GraphQL playground: http://localhost:8000/api{}" ROUTE);
     Router::new()
         .route(ROUTE, get(playground))
         .route(ROUTE, post(graphql_handler))
@@ -57,4 +65,11 @@ pub async fn graphql_handler(
         .execute(req.into_inner().data(headers))
         .await
         .into()
+}
+
+fn web_router() -> Router {
+    Router::new().nest_service(
+        "/",
+        ServeDir::new("static").not_found_service(ServeFile::new("static/index.html")),
+    )
 }
