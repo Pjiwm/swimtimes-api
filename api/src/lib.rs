@@ -13,7 +13,7 @@ use sea_orm::DatabaseConnection;
 
 use crate::graphql::schema::build_schema;
 pub mod graphql;
-pub mod jwk;
+pub mod jwt;
 
 #[derive(Clone)]
 pub struct AppData {
