@@ -1,5 +1,6 @@
-use crate::graphql::json_types::{PopulatedSwimTimeJson, SwimTimeJson};
+use crate::graphql::json_types::PopulatedSwimTimeJson;
 use async_graphql::{Context, Object, Result};
+use entity::swim_time::Model as SwimTimeModel;
 use repository::swim_time_repo::SwimTimeRepo;
 
 #[derive(Default)]
@@ -7,11 +8,11 @@ pub struct SwimTimeQuery;
 
 #[Object]
 impl SwimTimeQuery {
-    async fn get_swim_time_by_id(&self, ctx: &Context<'_>, id: i32) -> Result<SwimTimeJson> {
+    async fn get_swim_time_by_id(&self, ctx: &Context<'_>, id: i32) -> Result<SwimTimeModel> {
         let repo = ctx.data::<SwimTimeRepo>()?;
         repo.find_one_by_id(id)
             .await
-            .map_err(Into::into)
+            .map_err(|e| async_graphql::Error::new(e.to_string()))
             .map(Into::into)
     }
 
@@ -31,11 +32,11 @@ impl SwimTimeQuery {
         &self,
         ctx: &Context<'_>,
         competition_id: i32,
-    ) -> Result<Vec<SwimTimeJson>> {
+    ) -> Result<Vec<SwimTimeModel>> {
         let repo = ctx.data::<SwimTimeRepo>()?;
         repo.find_many_by_competition(competition_id)
             .await
-            .map_err(Into::into)
+            .map_err(|e| async_graphql::Error::new(e.to_string()))
             .map(|x| x.into_iter().map(Into::into).collect())
     }
 

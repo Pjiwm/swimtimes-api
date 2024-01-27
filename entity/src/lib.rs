@@ -7,3 +7,4 @@ pub mod swim_time;
 pub mod swimmer;
 pub mod team;
 pub mod records;
+pub mod validators;

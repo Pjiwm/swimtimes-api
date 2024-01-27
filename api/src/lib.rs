@@ -5,7 +5,7 @@ use axum::{
 };
 use axum_macros::debug_handler;
 use graphql::schema::AppSchema;
-use hyper::{header::{ACCEPT, ACCESS_CONTROL_ALLOW_ORIGIN, AUTHORIZATION, CONTENT_TYPE, ORIGIN}, HeaderMap, Method};
+use hyper::{header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE, ORIGIN}, HeaderMap, Method};
 use log::info;
 use sea_orm::DatabaseConnection;
 use tower_http::{cors::CorsLayer, services::{ServeDir, ServeFile}};
