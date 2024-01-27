@@ -1,11 +1,10 @@
-// import './index.scss'
 import { useState, useEffect } from 'react'
 import { Session, createClient } from '@supabase/supabase-js'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
+import config from '../../app.config';
 
-const anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdmZyZWZpd3Vsdmxoc2poem9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDYyMjcyNzEsImV4cCI6MjAyMTgwMzI3MX0.6edQB6SxlAcb-C-4t20jHCrKUq75h1Fz0cD1i6GW1tI";
-const supabase = createClient("https://hivfrefiwulvlhsjhzop.supabase.co", anonKey);
+const supabase = createClient(config.authClientUrl, config.anonKey);
 
 export default function Login() {
     const [session, setSession] = useState<Session | null>(null)
