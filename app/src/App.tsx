@@ -7,6 +7,7 @@ import Competitions from './pages/Competions';
 import Swimmers from './pages/Swimmers';
 import About from './pages/About';
 import Home from './pages/Home';
+import NotFound from './pages/NotFound';
 function App() {
 
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/swimmers" element={<Swimmers />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
     </Router>
