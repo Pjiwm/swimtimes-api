@@ -1,4 +1,4 @@
-import './index.css'
+// import './index.scss'
 import { useState, useEffect } from 'react'
 import { Session, createClient } from '@supabase/supabase-js'
 import { Auth } from '@supabase/auth-ui-react'
