@@ -1,17 +1,14 @@
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::{
-    extract::State,
-    response::{Html, IntoResponse},
-    routing::{get, post},
-    Router,
+    extract::State, http::HeaderValue, response::{Html, IntoResponse}, routing::{get, post}, Router
 };
 use axum_macros::debug_handler;
 use graphql::schema::AppSchema;
-use hyper::HeaderMap;
+use hyper::{header::{ACCEPT, ACCESS_CONTROL_ALLOW_ORIGIN, AUTHORIZATION, CONTENT_TYPE, ORIGIN}, HeaderMap, Method};
 use log::info;
 use sea_orm::DatabaseConnection;
-use tower_http::services::{ServeDir, ServeFile};
+use tower_http::{cors::CorsLayer, services::{ServeDir, ServeFile}};
 
 use crate::graphql::schema::build_schema;
 pub mod graphql;
@@ -32,12 +29,22 @@ pub async fn server(settings: &ServerSettings) -> Router {
     let app_data = AppData {
         schema: build_schema(settings.db_connection.clone(), settings.use_auth).await,
     };
+
+    let cors = CorsLayer::new()
+    .allow_credentials(true)
+    .allow_methods(vec![Method::GET, Method::POST, Method::PUT, Method::DELETE])
+    .allow_headers(vec![ORIGIN, AUTHORIZATION, ACCEPT, CONTENT_TYPE])
+    .allow_origin("http://localhost:8000".parse::<HeaderValue>().unwrap())
+    .allow_origin("http://localhost:5173".parse::<HeaderValue>().unwrap());
+
+
     let graphql = graphql_router();
     let web = web_router();
 
     Router::new()
         .nest("/api", graphql)
         .with_state(app_data)
+        .layer(cors)
         .nest("/", web)
 }
 
