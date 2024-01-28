@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_TEAMS_BY_NAME } from '../queries';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faMapMarker } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faMapMarker, faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const Teams: React.FC = () => {
-  const { loading, error, data } = useQuery(GET_TEAMS_BY_NAME, {
-    variables: { name: '' },
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTermOnSearch, setSearchTermOnSearch] = useState('');
+  const { loading, error, data, refetch } = useQuery(GET_TEAMS_BY_NAME, {
+    variables: { name: searchTermOnSearch },
   });
+
+  const handleSearch = () => {
+    setSearchTermOnSearch(searchTerm);
+  };
+
+  const resetFilter = () => {
+    setSearchTerm('');
+    setSearchTermOnSearch('');
+    refetch(); // Explicitly refetch data after resetting the filter
+  };
 
   if (loading) return <div className="text-center mt-8"><FontAwesomeIcon icon={faSpinner} spin size="2x" className="text-white" /></div>;
   if (error) return <div className="text-center mt-8">Error: {error.message}</div>;
@@ -15,27 +27,63 @@ const Teams: React.FC = () => {
   const teams: Array<any> = data.getTeamsByName;
 
   return (
-    <div className="max-w-screen-md mx-auto mt-8">
-      <h1 className="text-4xl font-bold mb-4 text-white">Teams</h1>
-      <div className="flex flex-col space-y-4">
-        {teams.map((team: any, index: number) => (
-          <div key={index} className="bg-white shadow-md p-4 rounded-lg">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between">
-              <div>
-                <p className="text-lg font-semibold text-blue-700">{team.name}</p>
-                <p className="text-gray-600 mb-2">Address: {team.address}</p>
-              </div>
-              <div className="flex items-start space-x-2 lg:ml-auto">
-                <FontAwesomeIcon icon={faMapMarker} className="text-blue-700 mt-1" />
-                <div className="text-gray-600">
-                  <div>{team.address}</div>
-                  <div>Zip Code: {team.zipCode}</div>
+    <div className="max-w-screen-xl mx-auto mt-8 flex flex-col md:flex-row">
+      {/* Filter Card on the left */}
+      <div className="w-full md:w-1/4 h-1/4 p-4 bg-gray-100 md:flex-shrink-0">
+        <h2 className="text-2xl font-bold mb-2 flex items-center justify-between">
+          Filter
+          <button
+            className="text-blue-500 hover:text-blue-700 focus:outline-none"
+            onClick={resetFilter}
+          >
+            <FontAwesomeIcon icon={faTimes} className="ml-1" />
+          </button>
+        </h2>
+        {/* Search bar (Rendered inline on larger screens) */}
+        <div className="flex items-center mb-4 md:flex">
+          <div className="flex-grow">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by team name"
+              className="p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring focus:border-blue-300 w-full"
+            />
+          </div>
+          {/* Search button */}
+          <button
+            className="p-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
+            onClick={handleSearch}
+          >
+            <FontAwesomeIcon icon={faSearch} />
+          </button>
+        </div>
+        {/* Display number of results */}
+        <p className="text-gray-600">Results: {teams.length}</p>
+      </div>
+
+      {/* Teams List on the right */}
+      <div className="w-full md:w-3/4 p-4 flex-grow">
+        <h1 className="text-4xl font-bold mb-4 text-white">Teams</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {teams.map((team: any, index: number) => (
+            <div key={index} className="bg-white shadow-md p-4 rounded-lg mb-4">
+              <div className="flex flex-col items-start justify-between h-full">
+                <div>
+                  <p className="text-lg font-semibold text-blue-700">{team.name}</p>
+                  <div className="flex items-start space-x-2 mt-2">
+                    <FontAwesomeIcon icon={faMapMarker} className="text-blue-700 mt-1" />
+                    <div className="text-gray-600">
+                      <div>{team.address}</div>
+                      <div>Zip Code: {team.zipCode}</div>
+                    </div>
+                  </div>
                 </div>
+                <hr className="my-2" />
               </div>
             </div>
-            <hr className="my-2" />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
