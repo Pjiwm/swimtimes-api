@@ -6,7 +6,7 @@ use sea_orm::{
 };
 use sea_orm::{EntityTrait, IntoActiveModel};
 
-const PAGE_SIZE: u64 = 50;
+const PAGE_SIZE: u64 = 45;
 
 pub struct TeamRepo(DatabaseConnection);
 
