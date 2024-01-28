@@ -25,7 +25,7 @@ mod swimmer_mod {
     pub struct Swimmer {
         #[graphql(validator(min_length = 5, max_length = 60))]
         pub name: String,
-        #[graphql(validator(custom = "AgeValidator::new()"))]
+        #[graphql(validator(custom = "AgeValidator::default()"))]
         pub date_of_birth: chrono::NaiveDate,
         pub team: i32,
     }
@@ -58,9 +58,9 @@ mod swim_time_mod {
     #[derive(DeriveIntoActiveModel, Clone, Debug, PartialEq, Eq, InputObject)]
     pub struct SwimTime {
         pub competition: i32,
-        #[graphql(validator(custom = "DistanceValidator::new()"))]
+        #[graphql(validator(custom = "DistanceValidator::default()"))]
         pub distance: i32,
-        #[graphql(validator(custom = "StrokeValidator::new()"))]
+        #[graphql(validator(custom = "StrokeValidator::default()"))]
         pub stroke: String,
         pub time: i32,
         pub swimmer: i32,
