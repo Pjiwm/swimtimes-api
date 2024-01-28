@@ -1,8 +1,12 @@
 use crate::result::{map_find, RepoError};
 use entity::records::{Competition, PopulatedCompetition};
 use entity::{competition, team};
-use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, Set};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, QuerySelect, Set,
+};
 use sea_orm::{EntityTrait, IntoActiveModel};
+
+const PAGE_SIZE: u64 = 50;
 
 pub struct CompetitionRepo(DatabaseConnection);
 
@@ -36,9 +40,12 @@ impl CompetitionRepo {
     pub async fn find_many_by_name(
         &self,
         name: &str,
+        idx: u64,
     ) -> Result<Vec<competition::Model>, RepoError> {
         competition::Entity::find()
             .filter(competition::Column::Name.contains(name))
+            .offset(idx * PAGE_SIZE)
+            .limit(PAGE_SIZE)
             .all(&self.0)
             .await
             .map_err(RepoError::DbErr)
@@ -47,8 +54,9 @@ impl CompetitionRepo {
     pub async fn find_many_by_name_populated(
         &self,
         name: &str,
+        idx: u64,
     ) -> Result<Vec<PopulatedCompetition>, RepoError> {
-        let competitions = self.find_many_by_name(name).await?;
+        let competitions = self.find_many_by_name(name, idx).await?;
 
         let mut populated_buffer = Vec::new();
         for c in competitions {

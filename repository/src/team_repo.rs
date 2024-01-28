@@ -1,10 +1,12 @@
-use crate::result::{RepoError, map_find};
+use crate::result::{map_find, RepoError};
 use entity::records::Team;
 use entity::team::{ActiveModel, Column, Entity, Model};
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, Set,
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, QuerySelect, Set,
 };
 use sea_orm::{EntityTrait, IntoActiveModel};
+
+const PAGE_SIZE: u64 = 50;
 
 pub struct TeamRepo(DatabaseConnection);
 
@@ -23,9 +25,11 @@ impl TeamRepo {
         map_find(result)
     }
 
-    pub async fn find_many_by_name(&self, name: &str) -> Result<Vec<Model>, RepoError> {
+    pub async fn find_many_by_name(&self, name: &str, idx: u64) -> Result<Vec<Model>, RepoError> {
         Entity::find()
             .filter(Column::Name.contains(name))
+            .offset(idx * PAGE_SIZE)
+            .limit(PAGE_SIZE)
             .all(&self.0)
             .await
             .map_err(RepoError::DbErr)

@@ -32,9 +32,10 @@ impl SwimTimeQuery {
         &self,
         ctx: &Context<'_>,
         competition_id: i32,
+        index: u64
     ) -> Result<Vec<SwimTimeModel>> {
         let repo = ctx.data::<SwimTimeRepo>()?;
-        repo.find_many_by_competition(competition_id)
+        repo.find_many_by_competition(competition_id, index)
             .await
             .map_err(|e| async_graphql::Error::new(e.to_string()))
             .map(|x| x.into_iter().map(Into::into).collect())
@@ -44,9 +45,10 @@ impl SwimTimeQuery {
         &self,
         ctx: &Context<'_>,
         competition_id: i32,
+        index: u64,
     ) -> Result<Vec<PopulatedSwimTimeJson>> {
         let repo = ctx.data::<SwimTimeRepo>()?;
-        repo.find_many_by_competition_populated(competition_id)
+        repo.find_many_by_competition_populated(competition_id, index)
             .await
             .map_err(Into::into)
             .map(|x| x.into_iter().map(Into::into).collect())

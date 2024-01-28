@@ -7,9 +7,9 @@ pub struct TeamQuery;
 
 #[Object]
 impl TeamQuery {
-    async fn get_teams_by_name(&self, ctx: &Context<'_>, name: String) -> Result<Vec<TeamModel>> {
+    async fn get_teams_by_name(&self, ctx: &Context<'_>, name: String, index: u64) -> Result<Vec<TeamModel>> {
         let repo = ctx.data::<TeamRepo>()?;
-        repo.find_many_by_name(&name)
+        repo.find_many_by_name(&name, index)
             .await
             .map_err(Into::into)
             .map(|x| x.into_iter().map(Into::into).collect())

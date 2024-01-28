@@ -1,6 +1,6 @@
 use crate::graphql::types::PopulatedSwimmerJson;
-use async_graphql::{Context, Object, Result};
 use crate::graphql::types::SwimmerModel;
+use async_graphql::{Context, Object, Result};
 use repository::swimmer_repo::SwimmerRepo;
 
 #[derive(Default)]
@@ -29,18 +29,22 @@ impl SwimmerQuery {
         &self,
         ctx: &Context<'_>,
         name: String,
+        index: u64,
     ) -> Result<Vec<SwimmerModel>> {
         let repo = ctx.data::<SwimmerRepo>()?;
-        repo.find_many_by_name(&name).await.map_err(Into::into)
+        repo.find_many_by_name(&name, index)
+            .await
+            .map_err(Into::into)
     }
 
     async fn get_swimmers_by_name_populated(
         &self,
         ctx: &Context<'_>,
         name: String,
+        index: u64,
     ) -> Result<Vec<PopulatedSwimmerJson>> {
         let repo = ctx.data::<SwimmerRepo>()?;
-        repo.find_many_by_name_populated(&name)
+        repo.find_many_by_name_populated(&name, index)
             .await
             .map_err(Into::into)
             .map(|x| x.into_iter().map(Into::into).collect())

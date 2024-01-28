@@ -1,8 +1,10 @@
 use crate::result::{map_find, RepoError};
 use entity::records::{PopulatedSwimTime, SwimTime};
 use entity::{competition, swim_time, swimmer};
-use sea_orm::{ActiveModelTrait, DatabaseConnection, DeleteResult, ModelTrait, Set};
+use sea_orm::{ActiveModelTrait, DatabaseConnection, DeleteResult, ModelTrait, QuerySelect, Set};
 use sea_orm::{EntityTrait, IntoActiveModel};
+
+const PAGE_SIZE: u64 = 50;
 
 pub struct SwimTimeRepo(DatabaseConnection);
 
@@ -39,12 +41,15 @@ impl SwimTimeRepo {
     pub async fn find_many_by_competition(
         &self,
         comp_id: i32,
+        idx: u64,
     ) -> Result<Vec<swim_time::Model>, RepoError> {
         let result = competition::Entity::find_by_id(comp_id).one(&self.0).await;
         let competition = map_find(result)?;
 
         competition
             .find_related(swim_time::Entity)
+            .offset(idx * PAGE_SIZE)
+            .limit(PAGE_SIZE)
             .all(&self.0)
             .await
             .map_err(RepoError::DbErr)
@@ -53,8 +58,9 @@ impl SwimTimeRepo {
     pub async fn find_many_by_competition_populated(
         &self,
         comp_id: i32,
+        idx: u64,
     ) -> Result<Vec<PopulatedSwimTime>, RepoError> {
-        let swim_times = self.find_many_by_competition(comp_id).await?;
+        let swim_times = self.find_many_by_competition(comp_id, idx).await?;
 
         let mut populated_buffer = Vec::new();
         for st in swim_times {

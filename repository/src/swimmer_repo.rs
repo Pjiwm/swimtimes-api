@@ -1,8 +1,12 @@
 use crate::result::{map_find, RepoError};
 use entity::records::{PopulatedSwimmer, Swimmer};
-use entity::{swimmer, team, swim_time};
-use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, Set};
+use entity::{swim_time, swimmer, team};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, DeleteResult, QueryFilter, QuerySelect, Set,
+};
 use sea_orm::{EntityTrait, IntoActiveModel};
+
+const PAGE_SIZE: u64 = 50;
 
 pub struct SwimmerRepo(DatabaseConnection);
 
@@ -28,9 +32,15 @@ impl SwimmerRepo {
         Ok(PopulatedSwimmer(swimmer, team))
     }
 
-    pub async fn find_many_by_name(&self, name: &str) -> Result<Vec<swimmer::Model>, RepoError> {
+    pub async fn find_many_by_name(
+        &self,
+        name: &str,
+        idx: u64,
+    ) -> Result<Vec<swimmer::Model>, RepoError> {
         swimmer::Entity::find()
             .filter(swimmer::Column::Name.contains(name))
+            .offset(idx * PAGE_SIZE)
+            .limit(PAGE_SIZE)
             .all(&self.0)
             .await
             .map_err(RepoError::DbErr)
@@ -39,8 +49,9 @@ impl SwimmerRepo {
     pub async fn find_many_by_name_populated(
         &self,
         name: &str,
+        idx: u64,
     ) -> Result<Vec<PopulatedSwimmer>, RepoError> {
-        let swimmers = self.find_many_by_name(name).await?;
+        let swimmers = self.find_many_by_name(name, idx).await?;
 
         let mut populated_buffer = Vec::new();
         for s in swimmers {

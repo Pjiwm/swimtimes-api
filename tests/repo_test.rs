@@ -40,7 +40,7 @@ async fn find_multiple_teams() {
         repo.insert_one(team.clone()).await.unwrap();
     }
 
-    let found_teams = repo.find_many_by_name("Team").await;
+    let found_teams = repo.find_many_by_name("Team", 0).await;
     assert!(found_teams.is_ok());
     assert_eq!(found_teams.as_ref().unwrap().len(), 9);
     assert_eq!(found_teams.unwrap()[3].name.as_ref(), "Team4".to_owned());
