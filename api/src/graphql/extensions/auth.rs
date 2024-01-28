@@ -19,16 +19,9 @@ impl ExtensionFactory for Auth {
     }
 }
 
+#[derive(Default)]
 struct AuthExtension {
     jwt_verifier: jwt::JwtVerifier,
-}
-
-impl Default for AuthExtension {
-    fn default() -> Self {
-        Self {
-            jwt_verifier: jwt::JwtVerifier::default(),
-        }
-    }
 }
 
 #[async_trait]

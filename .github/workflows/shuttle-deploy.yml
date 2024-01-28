@@ -8,6 +8,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: shuttle-hq/deploy-action@main
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install --prefix ./app/
+
+      - name: Build project
+        run: npm run build --prefix ./app/
+
+      - name: Deploy to Shuttle
+        uses: shuttle-hq/deploy-action@main
         with:
           deploy-key: ${{ secrets.SHUTTLE_API_KEY }}

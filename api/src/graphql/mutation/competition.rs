@@ -1,4 +1,4 @@
-use crate::graphql::json_types::CompetitionJson;
+use crate::graphql::types::CompetitionModel;
 use async_graphql::{Context, Object, Result};
 use entity::records::Competition;
 use repository::competition_repo::CompetitionRepo;
@@ -8,11 +8,11 @@ pub struct CompetitionMutation;
 
 #[Object]
 impl CompetitionMutation {
-    pub async fn create_competition(
+    async fn create_competition(
         &self,
         ctx: &Context<'_>,
         input: Competition,
-    ) -> Result<CompetitionJson> {
+    ) -> Result<CompetitionModel> {
         let repo = ctx.data::<CompetitionRepo>()?;
         repo.insert_one(input)
             .await
@@ -20,12 +20,12 @@ impl CompetitionMutation {
             .map(Into::into)
     }
 
-    pub async fn update_competition(
+    async fn update_competition(
         &self,
         ctx: &Context<'_>,
         id: i32,
         input: Competition,
-    ) -> Result<CompetitionJson> {
+    ) -> Result<CompetitionModel> {
         let repo = ctx.data::<CompetitionRepo>()?;
         repo.update_one(id, input)
             .await
