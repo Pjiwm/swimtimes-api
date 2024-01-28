@@ -29,7 +29,7 @@ const Teams: React.FC = () => {
   return (
     <div className="max-w-screen-xl mx-auto mt-8 flex flex-col md:flex-row">
       {/* Filter Card on the left */}
-      <div className="w-full md:w-1/4 h-1/4 p-4 bg-gray-100 md:flex-shrink-0">
+      <div className="w-full md:w-1/4 h-1/4 p-4 bg-gray-100 md:flex-shrink-0 mb-4">
         <h2 className="text-2xl font-bold mb-2 flex items-center justify-between">
           Filter
           <button
@@ -63,7 +63,7 @@ const Teams: React.FC = () => {
       </div>
 
       {/* Teams List on the right */}
-      <div className="w-full md:w-3/4 p-4 flex-grow">
+      <div className="w-full md:w-3/4 p-4 flex-grow bg-blue-600 rounded-md mt-4 md:ml-4">
         <h1 className="text-4xl font-bold mb-4 text-white">Teams</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {teams.map((team: any, index: number) => (
@@ -76,16 +76,18 @@ const Teams: React.FC = () => {
                     <div className="text-gray-600">
                       <div>{team.address}</div>
                       <div>Zip Code: {team.zipCode}</div>
+                      <hr className="my-2" />
                     </div>
                   </div>
                 </div>
-                <hr className="my-2" />
               </div>
             </div>
           ))}
         </div>
       </div>
     </div>
+
+
   );
 };
 
