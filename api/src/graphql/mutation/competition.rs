@@ -14,7 +14,7 @@ impl CompetitionMutation {
         input: Competition,
     ) -> Result<CompetitionModel> {
         let repo = ctx.data::<CompetitionRepo>()?;
-        repo.insert_one(input.into())
+        repo.insert_one(input)
             .await
             .map_err(Into::into)
             .map(Into::into)
@@ -27,7 +27,7 @@ impl CompetitionMutation {
         input: Competition,
     ) -> Result<CompetitionModel> {
         let repo = ctx.data::<CompetitionRepo>()?;
-        repo.update_one(id, input.into())
+        repo.update_one(id, input)
             .await
             .map_err(Into::into)
             .map(Into::into)

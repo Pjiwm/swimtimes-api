@@ -10,12 +10,12 @@ pub struct TeamMutation;
 impl TeamMutation {
     async fn create_team(&self, ctx: &Context<'_>, input: Team) -> Result<TeamModel> {
         let repo = ctx.data::<TeamRepo>()?;
-        repo.insert_one(input.into()).await.map_err(Into::into)
+        repo.insert_one(input).await.map_err(Into::into)
     }
 
     async fn update_team(&self, ctx: &Context<'_>, id: i32, input: Team) -> Result<TeamModel> {
         let repo = ctx.data::<TeamRepo>()?;
-        repo.update_one(id, input.into()).await.map_err(Into::into)
+        repo.update_one(id, input).await.map_err(Into::into)
     }
 
     pub async fn delete_team(&self, ctx: &Context<'_>, id: i32) -> Result<bool> {

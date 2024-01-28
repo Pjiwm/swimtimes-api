@@ -10,7 +10,7 @@ pub struct SwimTimeMutation;
 impl SwimTimeMutation {
     async fn create_swim_time(&self, ctx: &Context<'_>, input: SwimTime) -> Result<SwimTimeModel> {
         let repo = ctx.data::<SwimTimeRepo>()?;
-        repo.insert_one(input.into()).await.map_err(Into::into)
+        repo.insert_one(input).await.map_err(Into::into)
     }
 
     async fn update_swim_time(
@@ -20,7 +20,7 @@ impl SwimTimeMutation {
         input: SwimTime,
     ) -> Result<SwimTimeModel> {
         let repo = ctx.data::<SwimTimeRepo>()?;
-        repo.update_one(id, input.into()).await.map_err(Into::into)
+        repo.update_one(id, input).await.map_err(Into::into)
     }
 
     pub async fn delete_swim_time(&self, ctx: &Context<'_>, id: i32) -> Result<bool> {
