@@ -179,7 +179,7 @@ async fn find_multiple_competitions_populated() {
         competition_repo.insert_one(competition.clone()).await.unwrap();
     }
 
-    let found_competitions = competition_repo.find_many_by_name_populated("Competition").await;
+    let found_competitions = competition_repo.find_many_by_name_populated("Competition", 0).await;
     assert!(found_competitions.is_ok());
     assert_eq!(found_competitions.as_ref().unwrap().len(), 9);
     assert_eq!(found_competitions.unwrap()[3].0.name.as_ref(), "Competition4".to_owned());
@@ -211,7 +211,7 @@ async fn find_multiple_competitions() {
         competition_repo.insert_one(competition.clone()).await.unwrap();
     }
 
-    let found_competitions = competition_repo.find_many_by_name("Competition").await;
+    let found_competitions = competition_repo.find_many_by_name("Competition", 0 ).await;
     assert!(found_competitions.is_ok());
     assert_eq!(found_competitions.as_ref().unwrap().len(), 9);
     assert_eq!(found_competitions.unwrap()[3].name.as_ref(), "Competition4".to_owned());
