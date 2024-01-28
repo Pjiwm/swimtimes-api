@@ -1,21 +1,16 @@
+use crate::graphql::types::SwimmerModel;
 use async_graphql::{Context, Object, Result};
+use entity::records::Swimmer;
 use repository::swimmer_repo::SwimmerRepo;
-use entity::{records::Swimmer, swimmer::Model as SwimmerModel};
 
 #[derive(Default)]
 pub struct SwimmerMutation;
 
 #[Object]
 impl SwimmerMutation {
-    async fn create_swimmer(
-        &self,
-        ctx: &Context<'_>,
-        input: Swimmer,
-    ) -> Result<SwimmerModel> {
+    async fn create_swimmer(&self, ctx: &Context<'_>, input: Swimmer) -> Result<SwimmerModel> {
         let repo = ctx.data::<SwimmerRepo>()?;
-        repo.insert_one(input.into())
-            .await
-            .map_err(Into::into)
+        repo.insert_one(input.into()).await.map_err(Into::into)
     }
 
     async fn update_swimmer(
@@ -25,9 +20,7 @@ impl SwimmerMutation {
         input: Swimmer,
     ) -> Result<SwimmerModel> {
         let repo = ctx.data::<SwimmerRepo>()?;
-        repo.update_one(id, input.into())
-            .await
-            .map_err(Into::into)
+        repo.update_one(id, input.into()).await.map_err(Into::into)
     }
 
     async fn delete_swimmer(&self, ctx: &Context<'_>, id: i32) -> Result<bool> {

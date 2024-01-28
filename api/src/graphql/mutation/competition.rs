@@ -1,5 +1,5 @@
+use crate::graphql::types::CompetitionModel;
 use async_graphql::{Context, Object, Result};
-use entity::competition::Model as CompetitionModel;
 use entity::records::Competition;
 use repository::competition_repo::CompetitionRepo;
 

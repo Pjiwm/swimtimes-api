@@ -1,6 +1,6 @@
-use crate::graphql::json_types::PopulatedSwimmerJson;
+use crate::graphql::types::PopulatedSwimmerJson;
 use async_graphql::{Context, Object, Result};
-use entity::swimmer::Model as SwimmerModel;
+use crate::graphql::types::SwimmerModel;
 use repository::swimmer_repo::SwimmerRepo;
 
 #[derive(Default)]

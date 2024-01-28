@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize, SimpleObject)]
 #[sea_orm(table_name = "swimmer")]
+#[graphql(name = "SwimmerResult")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,

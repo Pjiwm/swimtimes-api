@@ -1,6 +1,6 @@
+use crate::graphql::types::SwimTimeModel;
 use async_graphql::{Context, Object, Result};
 use entity::records::SwimTime;
-use entity::swim_time::Model as SwimTimeModel;
 use repository::swim_time_repo::SwimTimeRepo;
 
 #[derive(Default)]

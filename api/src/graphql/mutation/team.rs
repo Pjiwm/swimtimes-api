@@ -1,5 +1,6 @@
+use crate::graphql::types::TeamModel;
 use async_graphql::{Context, Object, Result};
-use entity::{records::Team, team::Model as TeamModel};
+use entity::records::Team;
 use repository::team_repo::TeamRepo;
 
 #[derive(Default)]

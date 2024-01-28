@@ -1,7 +1,7 @@
-use crate::graphql::json_types::PopulatedSwimTimeJson;
+use crate::graphql::types::PopulatedSwimTimeJson;
 use async_graphql::{Context, Object, Result};
-use entity::swim_time::Model as SwimTimeModel;
 use repository::swim_time_repo::SwimTimeRepo;
+use crate::graphql::types::SwimTimeModel;
 
 #[derive(Default)]
 pub struct SwimTimeQuery;
