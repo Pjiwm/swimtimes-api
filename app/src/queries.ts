@@ -9,3 +9,14 @@ export const GET_TEAMS_BY_NAME = gql`
     }
   }
 `;
+
+export const GET_SWIMMERS_BY_NAME = gql`
+  query getSwimmersByName($name: String!, $index: Int!) {
+    getSwimmersByName(name: $name, index: $index) {
+      name
+      team
+      dateOfBirth
+      id
+    }
+  }
+`;
